@@ -24,9 +24,12 @@ impl Circle {
 
 
     //update the circle
-    pub fn update(&mut self, dt: f32) {
+    pub fn update(&mut self, dt: f32, friction: &f32) {
         self.velocity += self.acceleration * dt;
         self.position += self.velocity * dt;
+        //add a vector to the velocity vector of opposite direction and magnitude friction
+        self.velocity += self.velocity * -1.0 * *friction * dt;
+        
     }
 
     //draw the circle

@@ -8,6 +8,7 @@ use circle::Circle;
 async fn main() {
     let width: f32 = 800.0;
     let height: f32 = 600.0;
+    let friction: f32 = 0.9;
     request_new_screen_size(width, height);
     //create blue circle
     let mut circle: Circle = Circle::new(
@@ -33,16 +34,16 @@ async fn main() {
         //set velocity based on wasd keys for x and y
         circle.acceleration = Vec2::new(
             if is_key_down(KeyCode::D) {
-                100.0
+                500.0
             } else if is_key_down(KeyCode::A) {
-                -100.0
+                -500.0
             } else {
                 0.0
             },
             if is_key_down(KeyCode::W) {
-                -100.0
+                -500.0
             } else if is_key_down(KeyCode::S) {
-                100.0
+                500.0
             } else {
                 0.0
             },
@@ -55,7 +56,7 @@ async fn main() {
         draw_text(&format!("{}", fps), width - width / 30.0, height / 30.0, 20.0, WHITE);
         
         //update the circle
-        circle.update(dt);
+        circle.update(dt, &friction);
 
         //draw the circle
         circle.draw();
