@@ -33,26 +33,26 @@ impl Circle {
         //invert the velocity if there is a collision with the edge of the screen
         if self.position.x + self.radius > width {
             //add a vector to the velocity vector of opposite direction and magnitude friction
-            self.velocity += self.velocity * -1.0 * friction * dt;
             self.position.x = width - self.radius;
             self.velocity.x *= -1.0 * restitution;
+            self.velocity.y *= restitution;
             
         } else if self.position.x - self.radius < 0.0 {
             //add a vector to the velocity vector of opposite direction and magnitude friction
-            self.velocity += self.velocity * -1.0 * friction * dt;
             self.position.x = self.radius;
             self.velocity.x *= -1.0 * restitution;
+            self.velocity.y *= restitution;
         }
         if self.position.y + self.radius > height {
             //add a vector to the velocity vector of opposite direction and magnitude friction
-            self.velocity += self.velocity * -1.0 * friction * dt;
             self.position.y = height - self.radius;
             self.velocity.y *= -1.0 * restitution;
+            self.velocity.x *= restitution;
         } else if self.position.y - self.radius < 0.0 {
             //add a vector to the velocity vector of opposite direction and magnitude friction
-            self.velocity += self.velocity * -1.0 * friction * dt;
             self.position.y = self.radius;
             self.velocity.y *= -1.0 * restitution;
+            self.velocity.x *= restitution;
         }
         
     }

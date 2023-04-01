@@ -10,7 +10,7 @@ async fn main() {
     let height: f32 = 600.0;
     let friction: f32 = 3.0;
     let gravity: f32 = 1000.0;
-    let restitution: f32 = 0.5;
+    let restitution: f32 = 0.8;
     request_new_screen_size(width, height);
     //create blue circle
     let mut circle: Circle = Circle::new(
@@ -68,7 +68,8 @@ async fn main() {
 
         //render fps counter
         draw_text(&format!("{}", fps), width - width / 30.0, height / 30.0, 20.0, WHITE);
-        
+        draw_text(&format!("{}", (circle.velocity.x.powi(2) + circle.velocity.y.powi(2)).sqrt()), width - width / 30.0, height / 15.0, 20.0, WHITE);
+
         //update the circle
         circle.update(dt, friction, width, height, gravity, restitution);
 
