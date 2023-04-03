@@ -17,32 +17,22 @@ async fn main() {
         Vec2::new(screen_width() / 2.0, screen_height() / 2.0),
         Vec2::new(0.0, 0.0),
         Vec2::new(0.0, 0.0),
-        50.0,
+        25.0,
         BLUE,
+        0.0,
     );
-
-    let mut timer = 0.0;
 
     loop {
         let width: f32 = screen_width();
         let height: f32 = screen_height();
         //this frame scope variables
         let dt: f32 = get_frame_time();
-        timer += dt;
         let fps: i32 = get_fps();
 
         //keyboard inputs
         if is_key_down(KeyCode::Escape) {
             //exit the program
             exit(0);
-        }
-        if timer > 0.2 && (circle.velocity.x.powi(2) + circle.velocity.y.powi(2)).sqrt() < 10.0 {
-            //set the velocity to random number from (-10 to 10) * 1000
-            circle.velocity = Vec2::new(
-                rand::gen_range(-10.0, 10.0) * 1000.0,
-                rand::gen_range(-10.0, 10.0) * 1000.0,
-            );
-            timer = 0.0;
         }
 
         //set velocity based on wasd keys for x and y
