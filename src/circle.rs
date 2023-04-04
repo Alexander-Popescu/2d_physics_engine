@@ -7,67 +7,70 @@ pub struct Circle {
     pub acceleration: Vec2,
     pub radius: f32,
     pub color: Color,
-    pub timer: f32,
 }
 
 //circle implementation
 impl Circle {
     //constructor
-    pub fn new(position: Vec2, velocity: Vec2, acceleration: Vec2, radius: f32, color: Color, timer: f32) -> Circle {
+    pub fn new(position: Vec2, velocity: Vec2, acceleration: Vec2, radius: f32, color: Color) -> Circle {
         Circle {
             position,
             velocity,
             acceleration,
             radius,
             color,
-            timer,
         }
     }
 
 
     //update the circle
-    pub fn update(&mut self, dt: f32, friction: f32, width: f32, height: f32, gravity: f32, restitution: f32) {
+    pub fn update(&mut self, dt: f32, friction: f32, width: f32, height: f32, gravity: f32, restitution: f32, drag: f32) {
         //append gravity to y acceleration
         self.acceleration.y += gravity;
-        self.velocity += self.acceleration * dt;
-        self.position += self.velocity * dt;
+
+        //add drag to the object to slow it down
+        self.velocity -= self.velocity * (1.0 - drag);
+
+        //add a spring force toward center of screen
+        let spring_location = Vec2::new(width / 2.0, height / 2.0);
+        let displacement = spring_location - self.position;
+        let spring_force = displacement * 10.0;
+        self.acceleration += spring_force;
+        draw_line(
+            self.position.x,
+            self.position.y,
+            width / 2.0,
+            height / 2.0,
+            2.0,
+            WHITE,
+        );
+
+
+
 
         //invert the velocity if there is a collision with the edge of the screen
         if self.position.x + self.radius > width {
-            //add a vector to the velocity vector of opposite direction and magnitude friction
             self.position.x = width - self.radius;
             self.velocity.x *= -1.0 * restitution;
-            self.velocity.y *= restitution;
+            self.velocity.y = self.velocity.y * (1.0 - friction);
             
         } else if self.position.x - self.radius < 0.0 {
-            //add a vector to the velocity vector of opposite direction and magnitude friction
             self.position.x = self.radius;
             self.velocity.x *= -1.0 * restitution;
-            self.velocity.y *= restitution;
+            self.velocity.y = self.velocity.y * (1.0 - friction);
         }
         if self.position.y + self.radius > height {
-            //add a vector to the velocity vector of opposite direction and magnitude friction
             self.position.y = height - self.radius;
             self.velocity.y *= -1.0 * restitution;
-            self.velocity.x *= restitution;
+            self.velocity.x = self.velocity.x * (1.0 - friction);
         } else if self.position.y - self.radius < 0.0 {
-            //add a vector to the velocity vector of opposite direction and magnitude friction
             self.position.y = self.radius;
             self.velocity.y *= -1.0 * restitution;
-            self.velocity.x *= restitution;
+            self.velocity.x = self.velocity.x * (1.0 - friction);
         }
 
-        self.timer += dt;
-        if self.timer > 0.2 && (self.velocity.x.powi(2) + self.velocity.y.powi(2)).sqrt() < 10.0 {
-            //set the velocity to random number from (-10 to 10) * 1000
-            self.velocity = Vec2::new(
-                rand::gen_range(-10.0, 10.0) * 1000.0,
-                rand::gen_range(-10.0, 10.0) * 1000.0,
-            );
-            self.timer = 0.0;
-        }
-
-        
+        self.velocity += self.acceleration * dt;
+        self.position += self.velocity * dt;
     }
 
     //draw the circle
