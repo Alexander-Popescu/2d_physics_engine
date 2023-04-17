@@ -9,9 +9,10 @@ async fn main() {
     let width: f32 = 800.0;
     let height: f32 = 600.0;
     let friction: f32 = 0.1;
-    let gravity: f32 = 1500.0;
+    let gravity: f32 = 1000.0;
     let restitution: f32 = 0.8;
-    let drag = 0.999;
+    let drag = 0.995;
+    let render_debug_lines = false;
     request_new_screen_size(width, height);
     //create blue circle
     let mut circle: Circle = Circle::new(
@@ -38,10 +39,10 @@ async fn main() {
             exit(0);
         }
         if is_key_down(KeyCode::R) {
-            //set the velocity to random number from (-10 to 10) * 1000
+            //set the velocity to random number from (-10 to 10) * 500
             circle.velocity = Vec2::new(
-                rand::gen_range(-10.0, 10.0) * 1000.0,
-                rand::gen_range(-10.0, 10.0) * 1000.0,
+                rand::gen_range(-10.0, 10.0) * 500.0,
+                rand::gen_range(-10.0, 10.0) * 500.0,
             );
             timer = 0.0;
         }
@@ -49,16 +50,16 @@ async fn main() {
         //set velocity based on wasd keys for x and y
         circle.acceleration = Vec2::new(
             if is_key_down(KeyCode::D) {
-                500.0
+                1000.0
             } else if is_key_down(KeyCode::A) {
-                -500.0
+                -1000.0
             } else {
                 0.0
             },
             if is_key_down(KeyCode::W) {
-                -500.0
+                -1000.0
             } else if is_key_down(KeyCode::S) {
-                500.0
+                1000.0
             } else {
                 0.0
             },
@@ -75,7 +76,7 @@ async fn main() {
         circle.update(dt, friction, width, height, gravity, restitution, drag);
 
         //draw the circle
-        circle.draw();
+        circle.draw(render_debug_lines);
 
         next_frame().await
     }

@@ -31,20 +31,20 @@ impl Circle {
         //add drag to the object to slow it down
         self.velocity -= self.velocity * (1.0 - drag);
 
-        //add a spring force toward center of screen
-        let spring_location = Vec2::new(width / 2.0, height / 2.0);
-        let displacement = spring_location - self.position;
-        let spring_force = displacement * 10.0;
-        self.acceleration += spring_force;
+
+        //add spring force to the circle in the direction of the mouse and draw a line from the circle to the mouse
+        let mouse_pos = mouse_position();
+        let mouse_pos = Vec2::new(mouse_pos.0, mouse_pos.1);
+        let spring_force = (mouse_pos - self.position) * 25.0;
         draw_line(
             self.position.x,
             self.position.y,
-            width / 2.0,
-            height / 2.0,
+            mouse_pos.x,
+            mouse_pos.y,
             2.0,
-            WHITE,
+            GREEN,
         );
-
+        self.acceleration += spring_force;
 
 
 
@@ -74,16 +74,27 @@ impl Circle {
     }
 
     //draw the circle
-    pub fn draw(&self) {
+    pub fn draw(&self, render_debug_lines: bool) {
         draw_circle(self.position.x, self.position.y, self.radius, self.color);
         //draw line from center of circle to velocity vector of magnitude 100
-        draw_line(
-            self.position.x,
-            self.position.y,
-            self.position.x + self.velocity.x / 10.0,
-            self.position.y + self.velocity.y / 10.0,
-            2.0,
-            RED,
-        );
+        if render_debug_lines {
+            draw_line(
+                self.position.x,
+                self.position.y,
+                self.position.x + self.velocity.x / 10.0,
+                self.position.y + self.velocity.y / 10.0,
+                2.0,
+                RED,
+            );
+            //draw a yellow line to the acceleration vector
+            draw_line(
+                self.position.x,
+                self.position.y,
+                self.position.x + self.acceleration.x / 10.0,
+                self.position.y + self.acceleration.y / 10.0,
+                2.0,
+                YELLOW,
+            );
+        }
     }
 }
