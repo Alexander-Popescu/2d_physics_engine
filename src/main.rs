@@ -10,7 +10,7 @@ async fn main() {
     let height: f32 = 600.0;
     let friction: f32 = 0.1;
     let gravity: f32 = 9.81;
-    let restitution: f32 = 0.8;
+    let restitution: f32 = 0.75;
     let drag = 0.995;
     let render_debug_lines = false;
     request_new_screen_size(width, height);
@@ -22,7 +22,7 @@ async fn main() {
         Vec2::new(0.0, 0.0),
         50.0,
         BLUE,
-        2.5,
+        0.5,
     );
 
     let mut timer = 0.0;
@@ -45,6 +45,14 @@ async fn main() {
             circle.velocity = Vec2::new(
                 rand::gen_range(-10.0, 10.0) * 500.0,
                 rand::gen_range(-10.0, 10.0) * 500.0,
+            );
+            timer = 0.0;
+        }
+        if is_key_down(KeyCode::Y) {
+            //set the velocity to random number from (-10 to 10) * 500
+            circle.velocity = Vec2::new(
+                0.0,
+                0.0,
             );
             timer = 0.0;
         }

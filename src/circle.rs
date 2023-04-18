@@ -37,10 +37,12 @@ impl Circle {
         self.force.y -= self.force.y * drag;
 
 
-        //add spring force to the circle in the direction of the mouse and draw a line from the circle to the mouse
+        //add spring force to the circle in the direction of the mouse and draw a line from the circle to the mouse with a spring constant k and spring unstretched length u
         let mouse_pos = mouse_position();
         let mouse_pos = Vec2::new(mouse_pos.0, mouse_pos.1);
-        let spring_force = (mouse_pos - self.position) * 25.0;
+        let k = 100.0; //spring constant
+        let u = 100.0; //spring unstretched length
+        let d = 0.5; //damping value
         draw_line(
             self.position.x,
             self.position.y,
@@ -49,6 +51,10 @@ impl Circle {
             2.0,
             GREEN,
         );
+        //calculate the spring force with damping value d
+        let spring_force = (self.position - mouse_pos) * -k * (1.0 - u / (self.position - mouse_pos).length()) - d * self.velocity;
+
+        
         self.force += spring_force;
 
 
