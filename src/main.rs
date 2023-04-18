@@ -9,7 +9,7 @@ async fn main() {
     let width: f32 = 800.0;
     let height: f32 = 600.0;
     let friction: f32 = 0.1;
-    let gravity: f32 = 1000.0;
+    let gravity: f32 = 9.81;
     let restitution: f32 = 0.8;
     let drag = 0.995;
     let render_debug_lines = false;
@@ -19,8 +19,10 @@ async fn main() {
         Vec2::new(screen_width() / 2.0, screen_height() / 2.0),
         Vec2::new(0.0, 0.0),
         Vec2::new(0.0, 0.0),
+        Vec2::new(0.0, 0.0),
         50.0,
         BLUE,
+        2.5,
     );
 
     let mut timer = 0.0;

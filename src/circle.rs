@@ -5,31 +5,36 @@ pub struct Circle {
     pub position: Vec2,
     pub velocity: Vec2,
     pub acceleration: Vec2,
+    pub force : Vec2,
     pub radius: f32,
     pub color: Color,
+    pub mass: f32,
 }
 
 //circle implementation
 impl Circle {
     //constructor
-    pub fn new(position: Vec2, velocity: Vec2, acceleration: Vec2, radius: f32, color: Color) -> Circle {
+    pub fn new(position: Vec2, velocity: Vec2, acceleration: Vec2, force: Vec2, radius: f32, color: Color, mass: f32,) -> Circle {
         Circle {
             position,
             velocity,
             acceleration,
+            force,
             radius,
             color,
+            mass,
         }
     }
 
 
     //update the circle
     pub fn update(&mut self, dt: f32, friction: f32, width: f32, height: f32, gravity: f32, restitution: f32, drag: f32) {
-        //append gravity to y acceleration
-        self.acceleration.y += gravity;
+        //append gravity to y force
+        self.force.y += gravity * self.mass * 20000.0;
 
         //add drag to the object to slow it down
-        self.velocity -= self.velocity * (1.0 - drag);
+        self.force.x -= self.force.x * drag;
+        self.force.y -= self.force.y * drag;
 
 
         //add spring force to the circle in the direction of the mouse and draw a line from the circle to the mouse
@@ -44,7 +49,7 @@ impl Circle {
             2.0,
             GREEN,
         );
-        self.acceleration += spring_force;
+        self.force += spring_force;
 
 
 
@@ -69,6 +74,10 @@ impl Circle {
             self.velocity.x = self.velocity.x * (1.0 - friction);
         }
 
+        //update the acceleration
+        self.acceleration = self.force / self.mass;
+
+        //update the velocity and position
         self.velocity += self.acceleration * dt;
         self.position += self.velocity * dt;
     }
@@ -94,6 +103,15 @@ impl Circle {
                 self.position.y + self.acceleration.y / 10.0,
                 2.0,
                 YELLOW,
+            );
+            //draw a white force vector
+            draw_line(
+                self.position.x,
+                self.position.y,
+                self.position.x + self.force.x / 10.0,
+                self.position.y + self.force.y / 10.0,
+                2.0,
+                WHITE,
             );
         }
     }
